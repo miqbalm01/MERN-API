@@ -1,9 +1,19 @@
 const express =  require("express");
-
+const bodyParser = require('body-parser');
 const app = express();
 const productRoutes = require('./src/routes/products');
 
-app.use('/', productRoutes)
+app.use(bodyParser.json());
+
+// Mengatasi Error CORS Origin pada nodejs
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin','*');
+    res.setHeader('Access-Control-Allow-Methods','GET, POST, PUT, PATCH, DELETE, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers','Content-Type, Authorization');
+    next();
+})
+app.use('/v1/customer', productRoutes);
+app.listen(5000);
 
 // const router = express.Router();
 
@@ -24,6 +34,4 @@ app.use('/', productRoutes)
 //     next();
 // })
 
-app.use('/', router);
-
-app.listen(5000);
+//  

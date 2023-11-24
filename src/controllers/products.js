@@ -1,12 +1,16 @@
 exports.createProduct = (req,res,next)=>{
+
+    // request API dari client 
+    const name = req.body.name;
+    const price = req.body.price;
     res.json(
         {
             message : "Create Product Success",
             data: {
                 id: 1,
-                name: "Muhamad Iqbal Maulana", 
+                name: name, 
                 email: "iqbal@gmail.com",
-                price: 9000
+                price: price
             }
             
         }
