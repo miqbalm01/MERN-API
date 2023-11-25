@@ -1,6 +1,6 @@
 const mongoose = require('mongoose'); 
 const Schema = mongoose.Schema;
-// Membuat Struktur database mongo
+// Membuat Struktur database mongodb pada Blog
 const BlogPost = new Schema({
     title:{
         type: String,
