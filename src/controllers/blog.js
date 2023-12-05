@@ -1,5 +1,5 @@
 const {validationResult} = require('express-validator'); //  untuk mendapatkan hasil dari validasi yang telah ditentukan sebelumnya dalam middleware express-validator.
-const BlogPost = require('../models/blog'); // engimpor model BlogPost dari direktori ../models/blog. Model ini adalah model Mongoose yang merepresentasikan entitas blog yang telah Anda definisikan sebelumnya.
+const BlogPost = require('../models/blog'); // mengimpor model BlogPost dari direktori ../models/blog. Model ini adalah model Mongoose yang merepresentasikan entitas blog yang telah Anda definisikan sebelumnya.
 
 exports.createBlogPost = (req,res,next) => { // fungsi handler atau controller untuk endpoint pembuatan posting blog. Fungsi ini menerima req (request), res (response), dan next (next middleware) sebagai argumen.
 
@@ -75,4 +75,17 @@ exports.createBlogPost = (req,res,next) => { // fungsi handler atau controller u
     //         }
     //     }  
     // }
+}
+
+exports.getAllBlogPost = (req,res,next) => {
+    BlogPost.find()
+    .then(result => {
+        res.status(200).json({
+            message: 'Data Blog Post Berhasil di panggil',
+            data: result 
+        })
+    })
+    .catch(err => {  
+        next(err);
+    })
 }

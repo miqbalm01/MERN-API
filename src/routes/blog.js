@@ -11,5 +11,7 @@ router.post('/post',[ // mendefinisi rute HTTP dengan metode POST, Rutenya adala
     body('title').isLength({min:5}).withMessage("Input title tidak sesuai"), //middleware yang menggunakan express-validator untuk menentukan aturan validasi untuk bidang 'title' dalam body request. Di sini, Anda memeriksa apakah panjang dari bidang 'title' minimal harus 5 karakter.
     body('body').isLength({min:5}).withMessage("Input body tidak sesuai"), // middleware serupa untuk memvalidasi bidang 'body' dalam body request dengan aturan minimal 5 karakter.
 ], blogController.createBlogPost);
+
+router.get('/posts', blogController.getAllBlogPost);
  
 module.exports = router; // mengekspor objek router

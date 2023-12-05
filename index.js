@@ -5,7 +5,6 @@ const multer = require('multer'); // Middleware multer digunakan untuk mengelola
 const path = require('path'); // Modul path digunakan untuk melakukan operasi pada path direktori file dan direktori.
 const app = express(); // membuat instance aplikasi Express
 
-
 //const productRoutes = require('./src/routes/products');
 // memanggil fungsi routing yang telah di buat pada folder lain
 const authRouter = require('./src/routes/auth'); // Routing untuk fitur otentikasi.
@@ -40,8 +39,6 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 // Middleware multer yang menangani proses upload satu file dengan nama field 'image'.
 app.use(multer({storage: fileStorage, fileFilter: fileFilter}).single('image'));
 
-
-
 // Mengatasi Error CORS Origin pada nodejs
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin','*');
@@ -49,7 +46,6 @@ app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Headers','Content-Type, Authorization');
     next();
 })
-
 
 //app.use('/v1/customer', productRoutes);
 // middleware mengatur url halaman Auth Login

@@ -18,7 +18,7 @@ const BlogPost = new Schema({
         required: true,
     },
     author:{
-        type: Object,
+        type: Object,   
         required: true,
     }
 },{

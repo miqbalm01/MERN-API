@@ -87,3 +87,40 @@ err - response:
 [2] - Get Blog Post
 [3] - Update Blog Post
 [4] - Delete Blog Post
+
+
+project/
+│
+├── node_modules/
+│   └──  // Dependencies yang diinstal
+│
+├── src/
+│   ├── controllers/
+│   │   └──  // Logika bisnis atau "controllers" aplikasi
+│   │
+│   ├── models/
+│   │   └──  // Definisi model-model basis data (Mongoose schemas, dll.)
+│   │
+│   ├── routes/
+│   │   └──  // Definisi rute-rute aplikasi Express
+│   │
+│   ├── middleware/
+│   │   └──  // Middleware aplikasi
+│   │
+│   ├── config/
+│   │   └──  // Konfigurasi aplikasi (konfigurasi database, konfigurasi environment, dll.)
+│   │
+│   └── app.js atau index.js
+│       // Entry point aplikasi, konfigurasi Express, dan pengaturan server
+│
+├── public/
+│   └──  // File-file publik (HTML, CSS, JS, gambar, dll.)
+│
+├── tests/
+│   └──  // Unit tests atau integration tests
+│
+├── package.json
+│   // Informasi proyek, dependensi, dan skrip untuk menjalankan proyek
+│
+└── README.md
+    // Dokumentasi proyek
