@@ -1,5 +1,9 @@
 const {validationResult} = require('express-validator'); //  untuk mendapatkan hasil dari validasi yang telah ditentukan sebelumnya dalam middleware express-validator.
 const BlogPost = require('../models/blog'); // mengimpor model BlogPost dari direktori ../models/blog. Model ini adalah model Mongoose yang merepresentasikan entitas blog yang telah Anda definisikan sebelumnya.
+const { post } = require('../routes/auth');
+const path = require('path'); // Modul path digunakan untuk melakukan operasi pada path direktori file dan direktori.
+const fs = require('fs');
+
 
 exports.createBlogPost = (req,res,next) => { // fungsi handler atau controller untuk endpoint pembuatan posting blog. Fungsi ini menerima req (request), res (response), dan next (next middleware) sebagai argumen.
 
@@ -78,14 +82,149 @@ exports.createBlogPost = (req,res,next) => { // fungsi handler atau controller u
 }
 
 exports.getAllBlogPost = (req,res,next) => {
+    const currentPage = req.query.page || 1;
+    const perPage = req.query.perPage || 5;
+    // localhost:5000/v1/blog/posts?page=2&perPage=1 
+    // URL yang akan di tampil di browser API 
+    let totalItems;
+    
     BlogPost.find()
+    .countDocuments()
+    .then(count => {
+        totalItems = count;
+        return BlogPost.find()
+        .skip((parseInt(currentPage) - 1)* parseInt(perPage))
+        .limit(parseInt(perPage));
+    })
+
     .then(result => {
         res.status(200).json({
             message: 'Data Blog Post Berhasil di panggil',
-            data: result 
+            data: result,
+            total_data: totalItems,
+            per_page: parseInt(perPage),
+            current_page: parseInt(currentPage),
         })
     })
     .catch(err => {  
         next(err);
     })
 }
+
+exports.getBlogPostId = (req,res,next) => {
+    const postId = req.params.postId;
+    BlogPost.findById(postId)
+    .then(result => {
+        if(!result){
+            const error = new Error('Blog Post Tidak Ditemukan');
+            error.errorStatus = 404;
+            throw error;
+        }
+        res.status(200).json({
+            message: 'Data Blog Post Ditemukan',
+            data: result  
+        })
+    })
+    .catch(err => {  
+        next(err);
+    })
+}
+
+exports.updateBlogPost = (req,res,next) => {
+    const errors = validationResult(req);
+
+    if(!errors.isEmpty()){
+        const err = new Error('Invalid Error');
+        err.errorStatus = 400;
+        err.data = errors.array();
+        throw err;
+    }
+
+    if(!req.file){
+        const err = new Error('Gambar Harus Di Upload');
+        err.errorStatus = 422;
+        throw err;
+    }
+
+    const title = req.body.title;
+    const image = req.file.path;
+    const body = req.body.body;
+    const postId = req.params.postId;
+
+    BlogPost.findById(postId)
+    .then(post => {
+        if(!post){
+            const err = new Error('Blog Post Tidak Ditemukan2');
+            err.errorStatus = 404;
+            throw err;
+        }
+        post.title = title;
+        post.body = body;
+        post.image = image;
+
+        return post.save();
+    })
+    .then(result => {
+        res.status(200).json({
+            message: 'Update Sukses',
+            data: result,
+        })
+    })
+    .catch(err => {  
+        next(err);
+    })
+}
+
+exports.deleteBlogPost = (req,res,next) => {
+    const postId = req.params.postId;
+    
+    BlogPost.findById(postId)
+    .then(post => {
+        if(!post){
+            const error = new Error('Blog Post Tidak Ditemukan');
+            error.errorStatus = 404;
+            throw error;
+        }
+
+        removeImage(post.image);
+        return BlogPost.findOneAndDelete(postId);
+    })
+    .then(result => { 
+        res.status(200).json({
+            message: 'Blog Post Berhasil di hapus',
+            data: result,  
+        });
+    })
+    .catch(err => {  
+        next(err);
+    });
+}
+
+const removeImage = (filePath) => {
+    console.log('filepath :', filePath);
+    console.log('dirname :', __dirname);
+
+    filePath = path.join(__dirname, '../../', filePath);
+    fs.unlink(filePath, err => {
+        if (err) {
+            console.error('Error saat menghapus gambar:', err);
+        } else {
+            console.log('Gambar berhasil dihapus');
+        }
+    });
+}
+
+// Kode memanggil APi seluruh data pada mongodb
+// exports.getAllBlogPost = (req,res,next) => {
+    
+//     BlogPost.find()
+//     .then(result => {
+//         res.status(200).json({
+//             message: 'Data Blog Post Berhasil di panggil',
+//             data: result 
+//         })
+//     })
+//     .catch(err => {  
+//         next(err);
+//     })
+// }

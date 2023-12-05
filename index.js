@@ -65,7 +65,7 @@ app.use((error, req, res, next) =>{
 mongoose.connect('mongodb+srv://miqbalm01:Kitapastisatu21@atlascluster.b98jwcf.mongodb.net/blog?retryWrites=true&w=majority')
 .then(() => {
     // aplikasi Express dijalankan pada port 5000
-    app.listen(5000, () => console.log('Connection Success'));
+    app.listen(3000, () => console.log('Connection Success'));
 })
 .catch(err => console.log(err));
 

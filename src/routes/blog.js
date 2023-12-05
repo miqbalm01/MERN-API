@@ -6,12 +6,19 @@ const {body} = require('express-validator'); // digunakan untuk melakukan valida
 const blogController = require('../controllers/blog');
 // [POST] : /v1/blog/post
 
-
+// Input Data
 router.post('/post',[ // mendefinisi rute HTTP dengan metode POST, Rutenya adalah /v1/blog/post
     body('title').isLength({min:5}).withMessage("Input title tidak sesuai"), //middleware yang menggunakan express-validator untuk menentukan aturan validasi untuk bidang 'title' dalam body request. Di sini, Anda memeriksa apakah panjang dari bidang 'title' minimal harus 5 karakter.
     body('body').isLength({min:5}).withMessage("Input body tidak sesuai"), // middleware serupa untuk memvalidasi bidang 'body' dalam body request dengan aturan minimal 5 karakter.
 ], blogController.createBlogPost);
 
-router.get('/posts', blogController.getAllBlogPost);
- 
+router.get('/posts', blogController.getAllBlogPost); // fungsi pagenation
+// router.get('/posts', blogController.getAllBlogPost); // panggil semua data
+router.get('/post/:postId', blogController.getBlogPostId);
+router.put('/post/:postId', [ 
+    body('title').isLength({min:5}).withMessage("Input title tidak sesuai"), 
+    body('body').isLength({min:5}).withMessage("Input body tidak sesuai"),
+], blogController.updateBlogPost);
+router.delete('/post/:postId', blogController.deleteBlogPost);
+
 module.exports = router; // mengekspor objek router
